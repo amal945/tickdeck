@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../controller/home_controller.dart';
 import '../../utils/colors.dart' show AppColors;
-import '../../utils/constants.dart';
 import '../../utils/custom_widgets/custom_logout_dialogue_box.dart';
-import '../add_edit_todo/add_edit_todo.dart';
-import 'widgets/completed.dart';
-import 'widgets/pending.dart';
-
+import 'tabs/completed.dart';
+import 'tabs/pending.dart';
+import '../widgets/home_tab_bar.dart';
+import '../widgets/home_fab.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -16,8 +14,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomeController());
+
     return DefaultTabController(
-      length: 2, // Number of tabs
+      length: 2,
       child: Scaffold(
         backgroundColor: AppColors.surface,
         appBar: AppBar(
@@ -27,47 +26,16 @@ class HomeScreen extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              onPressed: () {
-                showLogoutDialog(context);
-              },
-              icon: Icon(Icons.logout_sharp,color: Colors.white,),
+              onPressed: () => showLogoutDialog(context),
+              icon: const Icon(Icons.logout_sharp, color: Colors.white),
             ),
           ],
           centerTitle: true,
           backgroundColor: AppColors.surface,
-          bottom: TabBar(
-            labelColor: Colors.blue,
-            indicatorColor: Colors.blue,
-            unselectedLabelColor: Colors.grey,
-            tabs: [
-              Obx(() => Tab(text: 'Pending (${controller.pending.value})')),
-              Obx(() => Tab(text: 'Completed (${controller.completed.value})')),
-            ],
-          ),
+          bottom: const HomeTabBar(),
         ),
-        body: TabBarView(children: [Pending(), Completed()]),
-
-        floatingActionButton: ElevatedButton(
-          onPressed: () {
-            Get.to(() => AddEditTodoScreen());
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 6,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Create", style: TextStyle(color: AppColors.onSurface)),
-              AppSpacing.width(0.02),
-              Icon(Icons.add, color: AppColors.onSurface),
-            ],
-          ),
-        ),
+        body: const TabBarView(children: [Pending(), Completed()]),
+        floatingActionButton: const HomeFAB(),
       ),
     );
   }
